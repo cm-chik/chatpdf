@@ -1,3 +1,3 @@
 "use server";
 
-//46:25
+export const signup = async (formData: z.infer<typeof SignUpSchema>) => {};
