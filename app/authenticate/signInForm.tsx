@@ -17,7 +17,6 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -77,7 +76,7 @@ const SignInForm = () => {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
-                      type="email"
+                      type="password"
                       placeholder="Input Your Password"
                       {...field}
                     />
