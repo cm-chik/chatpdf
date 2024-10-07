@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { signup } from "./auth.action";
 
 export const SignUpSchema = z
   .object({
