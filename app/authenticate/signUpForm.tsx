@@ -47,7 +47,8 @@ const SignUpForm = () => {
     },
   });
   //Step 2. Define the submit handler
-  function onSubmit(values: z.infer<typeof SignUpSchema>) {
+  async function onSubmit(values: z.infer<typeof SignUpSchema>) {
+    await signup(values);
     console.log(values);
   }
 
