@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -22,7 +22,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signup } from "./auth.action";
+import { signUp } from "./auth.action";
+import { useRouter } from "next/navigation";
 
 export const SignUpSchema = z
   .object({
@@ -37,6 +38,7 @@ export const SignUpSchema = z
   });
 
 const SignUpForm = () => {
+  const router = useRouter();
   //Step 1. Define the form
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
@@ -49,8 +51,14 @@ const SignUpForm = () => {
   });
   //Step 2. Define the submit handler
   async function onSubmit(values: z.infer<typeof SignUpSchema>) {
-    await signup(values);
-    console.log(values);
+    const res = await signUp(values);
+    if (res.success) {
+      toast.success("Success");
+      router.push("/dashboard");
+    } else {
+      toast.error(res.error);
+      console.error(res.error);
+    }
   }
 
   return (

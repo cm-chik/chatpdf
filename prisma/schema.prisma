@@ -22,6 +22,6 @@ model User {
 model Session {
   id        String   @id @default(cuid())
   userId    String
-  expiredAt DateTime
+  expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id])
 }
