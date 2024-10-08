@@ -1,6 +1,7 @@
 import { Lucia } from "lucia";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import { prisma } from "./prisma";
+import { cookies } from "next/headers";
 
 const adapter = new PrismaAdapter(prisma.session, prisma.user);
 
@@ -13,3 +14,42 @@ export const lucia = new Lucia(adapter, {
     },
   },
 });
+
+export const getUser = async () => {
+  const sessionId = cookies().get(lucia.sessionCookieName)?.value || null;
+  if (!sessionId) {
+    return null;
+  }
+  const { session, user } = await lucia.validateSession(sessionId);
+  try {
+    if (session && session.fresh) {
+      //refreshing the cookie
+      const sessionCookie = lucia.createSessionCookie(session.id);
+      cookies().set(
+        lucia.sessionCookieName,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
+    }
+    if (!session) {
+      const sessionCookie = lucia.createBlankSessionCookie();
+      cookies().set(
+        lucia.sessionCookieName,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  const dbUser = await prisma.user.findUnique({
+    where: {
+      id: user?.id,
+    },
+    select: {
+      email: true,
+      name: true,
+    },
+  });
+  return dbUser;
+};
