@@ -22,26 +22,39 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
 
-export const signInSchema = z.object({
+import { toast } from "sonner";
+import { signIn } from "./auth.action";
+
+export const SignInSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
 
 const SignInForm = () => {
+  const router = useRouter();
+
   //Step 1. Define the form
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<z.infer<typeof SignInSchema>>({
+    resolver: zodResolver(SignInSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
   //Step 2. Define the submit handler
-  function onSubmit(values: z.infer<typeof signInSchema>) {
+  async function onSubmit(values: z.infer<typeof SignInSchema>) {
     console.log(values);
+    const res = await signIn(values);
+    if (res.success) {
+      toast.success("Success");
+      router.push("/dashboard");
+    } else {
+      toast.error(res.error);
+      console.error(res.error);
+    }
   }
-
   return (
     <Card className="w-[400px]">
       <CardHeader>

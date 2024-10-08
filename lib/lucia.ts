@@ -2,6 +2,7 @@ import { Lucia } from "lucia";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import { prisma } from "./prisma";
 import { cookies } from "next/headers";
+import { signOut } from "@/app/authenticate/auth.action";
 
 const adapter = new PrismaAdapter(prisma.session, prisma.user);
 
@@ -32,12 +33,7 @@ export const getUser = async () => {
       );
     }
     if (!session) {
-      const sessionCookie = lucia.createBlankSessionCookie();
-      cookies().set(
-        lucia.sessionCookieName,
-        sessionCookie.value,
-        sessionCookie.attributes
-      );
+      await signOut();
     }
   } catch (error) {
     console.error(error);
