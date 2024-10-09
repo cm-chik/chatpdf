@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
   const codeVerifier = cookies().get("codeVerifier")?.value;
   const savedState = cookies().get("state")?.value;
 
+  console.log(codeVerifier, savedState, state);
   if (!codeVerifier || !savedState) {
     console.error("No codeVerifier or savedState");
     return new Response("Invalid request", { status: 400 });
@@ -30,6 +31,7 @@ export async function GET(req: NextRequest) {
     code,
     codeVerifier
   );
+
   const googleResponse = await fetch(
     "https://www.googleapis.com/oauth2/v1/userinfo",
     {

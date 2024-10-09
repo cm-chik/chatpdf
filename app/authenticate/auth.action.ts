@@ -102,15 +102,15 @@ export const getGoogleOAuthConsentURL = async () => {
       secure: process.env.NODE_ENV === "production",
     });
 
-    const res = await GoogleOAuthClient.createAuthorizationURL(
+    const authURL = await GoogleOAuthClient.createAuthorizationURL(
       state,
       codeVerifier,
       {
         scopes: ["email", "profile"],
       }
     );
-    if (res.href) {
-      return { success: true, url: res.toString() };
+    if (authURL.href) {
+      return { success: true, url: authURL.toString() };
     } else {
       return { success: false, error: "Cannot get URL from Google" };
     }

@@ -8,21 +8,23 @@ import { toast } from "sonner";
 
 export default function SignInGoogleButton() {
   const router = useRouter();
-
-  async function handleOnClick() {
-    const res = await getGoogleOAuthConsentURL();
-    if (res.success) {
-      router.push(res.url!);
-    } else {
-      toast.error(res.error);
-    }
-  }
   return (
     <Button
       className="w-[400px]"
-      onClick={() => {
-        handleOnClick();
+      onClick={async () => {
+        {
+          console.log("start");
+          const url = await getGoogleOAuthConsentURL();
+          console.log("url:", url);
+          if (url.success) {
+            router.push(url.url!);
+          } else {
+            toast.error(url.error);
+          }
+        }
       }}
-    ></Button>
+    >
+      Continue with Google!
+    </Button>
   );
 }
