@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import { Argon2id } from "oslo/password";
 import { cookies } from "next/headers";
 import { lucia } from "@/lib/lucia";
+import { GoogleOAuth } from "@/lib/googleOAuth";
+import { generateCodeVerifier, generateState } from "arctic";
 
 export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
   try {
@@ -86,3 +88,30 @@ export const signOut = async () => {
   }
 };
 
+export const getGoogleOAuthConsentURL = async () => {
+  try {
+    const state = generateState();
+    const codeVerifier = generateCodeVerifier();
+
+    cookies().set("codeVerifier", codeVerifier, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+    cookies().set("state", codeVerifier, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    const res = await GoogleOAuth.createAuthorizationURL(state, codeVerifier, {
+      scopes: ["email", "profile"],
+    });
+    if (res.href) {
+      return { success: true, url: res.href };
+    } else {
+      return { success: false, error: "Cannot get URL from Google" };
+    }
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Something went wrong" };
+  }
+};

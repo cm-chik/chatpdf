@@ -2,11 +2,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SignUpForm from "./SignUpForm";
 import SignInForm from "./SignInForm";
 import { Button } from "@/components/ui/button";
+import SignInGoogleButton from "./signInGoogleButton";
 
 export function AuthenticatePage() {
   return (
     <div className=" flex flex-col justify-center items-center h-screen gap-4">
-      <Button className="w-[400px]">Sign In to Google</Button>
+      <SignInGoogleButton />
       <Tabs defaultValue="Sign Up" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="Sign Up">Sign Up</TabsTrigger>
