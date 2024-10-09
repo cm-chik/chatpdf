@@ -40,7 +40,7 @@ const SignInForm = () => {
     resolver: zodResolver(SignInSchema),
     defaultValues: {
       email: "",
-      password: "",
+      password: "",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
     },
   });
   //Step 2. Define the submit handler

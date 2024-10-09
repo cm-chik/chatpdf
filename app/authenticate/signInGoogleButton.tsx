@@ -17,15 +17,12 @@ export default function SignInGoogleButton() {
       toast.error(res.error);
     }
   }
-
   return (
     <Button
       className="w-[400px]"
       onClick={() => {
-        handleOnClick(router);
+        handleOnClick();
       }}
-    >
-      Sign In to Google
-    </Button>
+    ></Button>
   );
 }
