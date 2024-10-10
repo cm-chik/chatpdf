@@ -5,6 +5,7 @@ import React from "react";
 import { getGoogleOAuthConsentURL } from "./auth.action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { RiGoogleFill } from "@remixicon/react";
 
 export default function SignInGoogleButton() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function SignInGoogleButton() {
         }
       }}
     >
+      <RiGoogleFill className="w-4 h-4 mr-2" />
       Continue with Google!
     </Button>
   );

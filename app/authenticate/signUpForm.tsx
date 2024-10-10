@@ -142,7 +142,7 @@ const SignUpForm = () => {
         </Form>
       </CardContent>
       <CardFooter>
-        <Button onClick={form.handleSubmit(onSubmit)}>Login</Button>
+        <Button onClick={form.handleSubmit(onSubmit)}>Sign Up</Button>
       </CardFooter>
     </Card>
   );

@@ -11,7 +11,8 @@ const DashboardPage = async () => {
 
   return (
     <div>
-      You are logged in as {user.email}
+      Welcome Back! {user.email}
+      <br></br>
       <SignOutButton />
     </div>
   );
