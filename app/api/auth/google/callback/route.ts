@@ -34,12 +34,12 @@ export async function GET(req: NextRequest) {
     "https://www.googleapis.com/oauth2/v1/userinfo",
     {
       headers: {
-        Authentication: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     }
   );
   if (googleResponse.status !== 200) {
-    console.error("Failed to fetch user info");
+    console.error("Failed to fetch user info", googleResponse.status);
     return new Response("Failed to fetch user info", {
       status: googleResponse.status,
     });
