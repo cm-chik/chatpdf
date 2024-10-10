@@ -60,6 +60,7 @@ export const signIn = async (values: z.infer<typeof SignInSchema>) => {
       return { error: "Invalid password", success: false };
     }
     const session = await lucia.createSession(user.id, {});
+    console.log("session created successfully");
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
       sessionCookie.name,

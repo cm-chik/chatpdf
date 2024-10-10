@@ -45,7 +45,6 @@ const SignInForm = () => {
   });
   //Step 2. Define the submit handler
   async function onSubmit(values: z.infer<typeof SignInSchema>) {
-    console.log(values);
     const res = await signIn(values);
     if (res.success) {
       toast.success("Success");
