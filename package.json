@@ -10,6 +10,7 @@
     "devpc": "next dev --port 8642"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.668.0",
     "@hookform/resolvers": "^3.9.0",
     "@lucia-auth/adapter-prisma": "^4.0.1",
     "@neondatabase/serverless": "^0.10.1",
