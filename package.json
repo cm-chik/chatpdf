@@ -34,6 +34,7 @@
     "prisma": "^5.20.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-dropzone": "^14.2.9",
     "react-hook-form": "^7.53.0",
     "remixicon": "^4.3.0",
     "serverless": "^4.4.5",
