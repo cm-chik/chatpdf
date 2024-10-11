@@ -22,7 +22,7 @@ export async function uploadToS3(
 
       s3.putObject(
         params,
-        (err: any, data: PutObjectCommandOutput | undefined) => {
+        (error, data: PutObjectCommandOutput | undefined) => {
           return resolve({
             file_key,
             file_name: file.name,
