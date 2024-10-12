@@ -10,6 +10,7 @@
     "devpc": "set NODE_OPTIONS='--max-old-space-size=8192' && next dev --port 8642"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^0.0.66",
     "@aws-sdk/client-s3": "^3.668.0",
     "@hookform/resolvers": "^3.9.0",
     "@langchain/community": "^0.3.4",
