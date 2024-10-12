@@ -1,4 +1,3 @@
-"use server";
 import { z } from "zod";
 import { SignUpSchema } from "./SignUpForm";
 import { SignInSchema } from "./SignInForm";

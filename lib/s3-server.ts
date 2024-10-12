@@ -1,4 +1,3 @@
-"use server";
 import AWS, { S3 } from "aws-sdk";
 import fs from "fs";
 export async function downloadFromS3(file_key: string) {
