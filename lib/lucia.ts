@@ -45,6 +45,7 @@ export const getUser = async () => {
     select: {
       email: true,
       name: true,
+      id: true,
     },
   });
   return dbUser;

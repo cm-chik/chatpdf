@@ -49,7 +49,7 @@ export async function loadS3IntoPinecone(fileKey: string) {
 
   // Step 4. upload to pinecone
   const client = await getPineconeClient();
-  const pineconeIndex = await client.index("chatpdf");
+  const pineconeIndex = client.index("chatpdf");
   const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
 
   console.log("inserting vectors into pinecone");

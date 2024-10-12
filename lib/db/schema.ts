@@ -9,6 +9,9 @@ import {
 
 export const userSystemEnum = pgEnum("user_system_enum", ["user", "system"]);
 
+//export the type of chat to schema
+export type DrizzleChat = typeof chats.$inferSelect;
+
 //chat table contains different chats, each chat is a row in db
 export const chats = pgTable("chats", {
   id: serial("id").primaryKey(),
@@ -30,4 +33,13 @@ export const messages = pgTable("messages", {
   role: userSystemEnum("role").notNull(),
 });
 
-//drizzle-kit create migration and database sync up with above
+
+//export usersubsription
+export const userSubscriptions = pgTable("user_subscriptions", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id", { length: 256 }).notNull().unique(),
+  stripeCustomerId: varchar("stripe_customer_id", { length: 256 }).notNull().unique(),
+  stripeSubscriptionId: varchar("stripe_subscription_id", { length: 256 }).notNull().unique(),
+  stripePriceId: varchar("stripe_price_id", { length: 256 }).notNull(),
+  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end"),
+});

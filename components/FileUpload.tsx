@@ -6,8 +6,10 @@ import { uploadToS3 } from "@/lib/s3";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const FileUpload = () => {
+  const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
   const { mutate, isPending } = useMutation({
     mutationFn: async ({
@@ -43,8 +45,9 @@ const FileUpload = () => {
           return;
         }
         mutate(data, {
-          onSuccess: (data) => {
-            toast.success(data.message);
+          onSuccess: ({ chatId }) => {
+            toast.success("Uploaded successfully");
+            router.push(`/chat/${chatId}`);
           },
           onError: (data) => {
             console.error(data);
