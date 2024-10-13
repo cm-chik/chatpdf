@@ -8,7 +8,10 @@ import { NextResponse } from "next/server";
 
 export const runtime = "edge";
 
+
+
 const openai = createOpenAI({
+  baseURL: process.env.OPENAI_BASE_URL!,
   apiKey: process.env.OPENAI_API_KEY!,
 });
 

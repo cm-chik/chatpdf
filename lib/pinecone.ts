@@ -33,17 +33,16 @@ export async function loadS3IntoPinecone(fileKey: string) {
   console.log("Downloading from S3...");
   const file_name = await downloadFromS3(fileKey);
 
-  console.log("Downloaded from S3");
   if (!file_name) {
     throw new Error("Failed to download from S3");
   }
-
-  // Load the PDF into LangChain
+  // Load the PDF into LangChain=
   const loader = new PDFLoader(file_name);
   const pages = (await loader.load()) as PDFPage[];
 
   // Step 2. Split and segment the pages into chunks
   const documents = await Promise.all(pages.map(prepareDocumentChunks));
+
   // Step 3. vectorise and embed indibvidual documents
   const vectors = await Promise.all(documents.flat().map(embedDocument));
 
@@ -51,8 +50,6 @@ export async function loadS3IntoPinecone(fileKey: string) {
   const client = await getPineconeClient();
   const pineconeIndex = client.index("chatpdf");
   const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
-
-  console.log("inserting vectors into pinecone");
   await namespace.upsert(vectors);
 
   return documents[0];
@@ -77,14 +74,26 @@ async function embedDocument(doc: Document) {
   }
 }
 
+export const truncateStringByBytes = (str: string, bytes: number) => {
+  const enc = new TextEncoder();
+  return new TextDecoder("utf-8").decode(enc.encode(str).slice(0, bytes));
+};
+
 async function prepareDocumentChunks(page: PDFPage, splitSize: number) {
-  let { pageContent, metadata } = page;
+  let { pageContent } = page;
   pageContent = pageContent.replace("/\n/g", "");
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: splitSize,
-    chunkOverlap: 200,
+    chunkSize: 200,
+    chunkOverlap: 10,
   });
-  const texts = splitter.createDocuments([pageContent]);
-
-  return texts;
+  const docs = splitter.splitDocuments([
+    new Document({
+      pageContent,
+      metadata: {
+        pageNumber: page.metadata.loc.pageNumber,
+        text: truncateStringByBytes(pageContent, 36000),
+      },
+    }),
+  ]);
+  return docs;
 }

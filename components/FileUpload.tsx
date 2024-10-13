@@ -34,7 +34,9 @@ const FileUpload = () => {
     onDrop: async (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file.size > 10 * 1024 * 1024) {
-        alert("File size is too big. Please upload a file smaller than 10MB.");
+        toast.error(
+          "File size is too big. Please upload a file smaller than 10MB."
+        );
         return;
       }
 
@@ -46,12 +48,12 @@ const FileUpload = () => {
         }
         mutate(data, {
           onSuccess: ({ chatId }) => {
-            toast.success("Uploaded successfully");
+            toast.success("Chat Created!");
             router.push(`/chat/${chatId}`);
           },
           onError: (data) => {
+            toast.error("Error Creating chat");
             console.error(data);
-            toast.error("Something went wrong in uploading");
           },
         });
       } catch (error) {
