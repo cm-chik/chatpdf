@@ -1,7 +1,5 @@
-import { neon, neonConfig } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-
-neonConfig.fetchConnectionCache = true; //Cache the connection to the database
 
 if (!process.env.POSTGRES_URL) {
   throw new Error("POSTGRES_URL is not set");
