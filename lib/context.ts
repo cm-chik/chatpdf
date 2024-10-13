@@ -8,7 +8,6 @@ export async function getMatchesFromEmbeddings(
 ) {
   try {
     const client = new Pinecone({
-      environment: process.env.PINECONE_ENVIRONMENT!,
       apiKey: process.env.PINECONE_API_KEY!,
     });
     const pineconeIndex = await client.index("chatpdf");
