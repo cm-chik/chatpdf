@@ -32,16 +32,16 @@ const FileUpload = () => {
     },
     maxFiles: 1,
     onDrop: async (acceptedFiles) => {
-      setIsUploading(true);
       const file = acceptedFiles[0];
       if (file.size > 10 * 1024 * 1024) {
         alert("File size is too big. Please upload a file smaller than 10MB.");
         return;
       }
+
       try {
         const data = await uploadToS3(file);
         if (!data?.file_key || !data?.file_name) {
-          toast.error("Something went wrong");
+          toast.error("Something went wrong in uploading to S3");
           return;
         }
         mutate(data, {
@@ -51,11 +51,12 @@ const FileUpload = () => {
           },
           onError: (data) => {
             console.error(data);
-            toast.error("Something went wrong");
+            toast.error("Something went wrong in uploading");
           },
         });
       } catch (error) {
         console.error(error);
+        toast.error("Something went wrong");
       } finally {
         setIsUploading(false);
       }
