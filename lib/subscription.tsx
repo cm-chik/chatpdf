@@ -2,12 +2,13 @@ import { db } from "./db";
 import { getUser } from "./lucia";
 import { userSubscriptions } from "./db/schema";
 import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 export const checkSubscription = async () => {
   const user = await getUser();
   if (!user) {
-    return false;
+    redirect("/authenticate");
   }
 
   const _userSubscriptions = await db

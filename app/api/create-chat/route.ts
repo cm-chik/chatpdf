@@ -25,6 +25,7 @@ export async function POST(req: Request, res: Response) {
         userId: user.id,
       })
       .returning({ insertedId: chats.id });
+    console.log("Chat created successfully: ", chat_id[0].insertedId);
     return NextResponse.json(
       { chat_id: chat_id[0].insertedId },
       { status: 200 }

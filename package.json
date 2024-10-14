@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "export NODE_OPTIONS='--max-old-space-size=8192' && next dev --port 8642",
+    "dev": "export NODE_OPTIONS='--max-old-space-size=8192' && next dev --port 8642 --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

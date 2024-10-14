@@ -14,9 +14,7 @@ export default function SignInGoogleButton() {
       className="w-[400px]"
       onClick={async () => {
         {
-          console.log("start");
           const url = await getGoogleOAuthConsentURL();
-          console.log("url:", url);
           if (url.success) {
             router.push(url.url!);
           } else {

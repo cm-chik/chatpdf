@@ -15,15 +15,22 @@ type Props = {
 
 const ChatPage = async ({ params: { chatId } }: Props) => {
   const user = await getUser();
-  if (!user?.id) {
-    return redirect("/sign-in");
+  if (!user) {
+    redirect("/authenticate");
   }
-  const _chats = await db.select().from(chats).where(eq(chats.userId, user.id));
+  console.log(user!.id, chatId);
+  const _chats = await db
+    .select()
+    .from(chats)
+    .where(eq(chats.userId, user!.id));
+  console.log(!_chats.find((chat) => chat.id === parseInt(chatId)));
   if (!_chats) {
+    console.log("no chats");
     return redirect("/");
   }
   if (!_chats.find((chat) => chat.id === parseInt(chatId))) {
-    return redirect("/");
+    console.log("no chats, redirecting");
+    return <div> No chat</div>;
   }
 
   const currentChat = _chats.find((chat) => chat.id === parseInt(chatId));
@@ -48,5 +55,4 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
     </div>
   );
 };
-
 export default ChatPage;
