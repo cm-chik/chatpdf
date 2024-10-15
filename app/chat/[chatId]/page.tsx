@@ -18,12 +18,10 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
   if (!user) {
     redirect("/authenticate");
   }
-  console.log(user!.id, chatId);
   const _chats = await db
     .select()
     .from(chats)
     .where(eq(chats.userId, user!.id));
-  console.log(!_chats.find((chat) => chat.id === parseInt(chatId)));
   if (!_chats) {
     console.log("no chats");
     return redirect("/");
@@ -35,7 +33,7 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
 
   const currentChat = _chats.find((chat) => chat.id === parseInt(chatId));
   const isPro = await checkSubscription();
-
+  
   return (
     <div className="flex max-h-screen overflow-scroll">
       <div className="flex w-full max-h-screen overflow-scroll">

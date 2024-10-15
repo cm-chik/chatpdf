@@ -12,6 +12,7 @@ import { Message } from "ai";
 type Props = { chatId: number };
 
 const ChatComponent = ({ chatId }: Props) => {
+  console.log(chatId);
   const { data, isLoading } = useQuery({
     queryKey: ["chat", chatId],
     queryFn: async () => {
