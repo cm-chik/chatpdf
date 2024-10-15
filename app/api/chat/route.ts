@@ -1,5 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import { generateText } from "ai";
+import { streeamText } from "ai";
 import { getContext } from "@/lib/context";
 import { db } from "@/lib/db";
 import { chats, messages as _messages } from "@/lib/db/schema";
@@ -45,19 +45,23 @@ export async function POST(req: Request) {
       content: lastMessage.content,
       role: "user",
     });
-
-    const { text } = await generateText({
+    const data = new StreamData();
+data.append({test: prompt.content});
+//change to streamText
+    const textStream = await streamText({
       model: openai(process.env.GPT_MODEL!),
       prompt: promptStr.content,
-    });
-    console.log("text:", text);
-
-    await db.insert(_messages!).values({
+      onFinish() {
+              //save msg in stream
+        await db.insert(data).values({
       chatsId: chatId,
       content: text,
       role: "system",
+        });
     });
-    return text;
+    console.log("text:", text);
+    return textStream.toDataStreamResponse({data})
+
   } catch (error) {
     console.error(error);
     return NextResponse.json(
