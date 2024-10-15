@@ -1,5 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import { streeamText } from "ai";
+import { StreamData, streamText } from "ai";
 import { getContext } from "@/lib/context";
 import { db } from "@/lib/db";
 import { chats, messages as _messages } from "@/lib/db/schema";
@@ -7,8 +7,6 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export const runtime = "edge";
-
-
 
 const openai = createOpenAI({
   baseURL: process.env.OPENAI_BASE_URL!,
@@ -19,13 +17,15 @@ export async function POST(req: Request) {
   try {
     const { messages, chatId } = await req.json();
     const _chats = await db.select().from(chats).where(eq(chats.id, chatId));
+
     if (_chats.length != 1) {
       return NextResponse.json({ error: "chat not found" }, { status: 404 });
     }
     const lastMessage = messages[messages.length - 1];
+    const fileKey = _chats[0].fileKey;
 
-//get context enable extract relevant data from pdf
-const context = await getContext(lastMessage.content, fileKey);
+    //get context enable extract relevant data from pdf
+    const context = await getContext(lastMessage.content, fileKey);
 
     const promptStr = {
       role: "system",
@@ -45,41 +45,32 @@ const context = await getContext(lastMessage.content, fileKey);
       `,
     };
 
-//save user message into db
+    //save user message into db
     await db.insert(_messages!).values({
       chatsId: chatId,
       content: lastMessage.content,
       role: "user",
     });
 
-
-
-const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-        prompt,
-        ...messages.filter((message: Message) => message.role === "user"),
-      ],
-      stream: true,
-    });
-
-const data = new StreamData();
-data.append({test: prompt.content});
-//change to streamText
+    const data = new StreamData();
+    data.append({ test: promptStr });
+    //change to streamText
     const textStream = await streamText({
       model: openai(process.env.GPT_MODEL!),
-      prompt: promptStr.content,
+      system: promptStr.content,
+      messages: [promptStr, ...messages],
       onFinish() {
-              //save msg in stream
-        await db.insert(data).values({
-      chatsId: chatId,
-      content: text,
-      role: "system",
-        });
+        data.close();
+        console.log("data:", data);
+        //save msg in stream
+        // db.insert(messages).values({
+        //   chatsId: chatId,
+        //   content: data,
+        //   role: "system",
+        // });
+      },
     });
-    console.log("text:", text);
-    return textStream.toDataStreamResponse({data})
-
+    return textStream.toDataStreamResponse({ data });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
