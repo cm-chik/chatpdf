@@ -23,6 +23,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "chat not found" }, { status: 404 });
     }
     const lastMessage = messages[messages.length - 1];
+
+//get context enable extract relevant data from pdf
 const context = await getContext(lastMessage.content, fileKey);
 
     const promptStr = {
@@ -42,6 +44,8 @@ const context = await getContext(lastMessage.content, fileKey);
       AI assistant will not invent anything that is not drawn directly from the context.
       `,
     };
+
+//save user message into db
     await db.insert(_messages!).values({
       chatsId: chatId,
       content: lastMessage.content,
