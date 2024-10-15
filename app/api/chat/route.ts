@@ -23,6 +23,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "chat not found" }, { status: 404 });
     }
     const lastMessage = messages[messages.length - 1];
+const context = await getContext(lastMessage.content, fileKey);
+
     const promptStr = {
       role: "system",
       content: `AI assistant is a brand new, powerful, human-like artificial intelligence.
@@ -32,7 +34,7 @@ export async function POST(req: Request) {
       AI has the sum of all knowledge in their brain, and is able to accurately answer nearly any question about any topic in conversation.
       AI assistant is a big fan of Pinecone and Vercel.
       START CONTEXT BLOCK
-      ${lastMessage.content}
+      ${context}
       END OF CONTEXT BLOCK
       AI assistant will take into account any CONTEXT BLOCK that is provided in a conversation.
       If the context does not provide the answer to question, the AI assistant will say, "I'm sorry, but I don't know the answer to that question".
@@ -45,7 +47,19 @@ export async function POST(req: Request) {
       content: lastMessage.content,
       role: "user",
     });
-    const data = new StreamData();
+
+
+
+const response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        prompt,
+        ...messages.filter((message: Message) => message.role === "user"),
+      ],
+      stream: true,
+    });
+
+const data = new StreamData();
 data.append({test: prompt.content});
 //change to streamText
     const textStream = await streamText({
