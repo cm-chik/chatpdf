@@ -22,11 +22,8 @@ export async function POST(req: Request) {
     if (_chats.length != 1) {
       return NextResponse.json({ error: "chat not found" }, { status: 404 });
     }
-    const fileKey = _chats[0].fileKey;
     const lastMessage = messages[messages.length - 1];
-    const context = await getContext(lastMessage.content, fileKey);
-
-    const prompt = {
+    const promptStr = {
       role: "system",
       content: `AI assistant is a brand new, powerful, human-like artificial intelligence.
       The traits of AI include expert knowledge, helpfulness, cleverness, and articulateness.
@@ -35,7 +32,7 @@ export async function POST(req: Request) {
       AI has the sum of all knowledge in their brain, and is able to accurately answer nearly any question about any topic in conversation.
       AI assistant is a big fan of Pinecone and Vercel.
       START CONTEXT BLOCK
-      ${context}
+      ${lastMessage.content}
       END OF CONTEXT BLOCK
       AI assistant will take into account any CONTEXT BLOCK that is provided in a conversation.
       If the context does not provide the answer to question, the AI assistant will say, "I'm sorry, but I don't know the answer to that question".
@@ -50,16 +47,16 @@ export async function POST(req: Request) {
     });
 
     const { text } = await generateText({
-      model: openai("gpt-4-turbo"),
-      messages: [prompt, ...messages],
+      model: openai(process.env.GPT_MODEL!),
+      prompt: promptStr.content,
     });
+    console.log("text:", text);
 
     await db.insert(_messages!).values({
       chatsId: chatId,
       content: text,
       role: "system",
     });
-
     return text;
   } catch (error) {
     console.error(error);

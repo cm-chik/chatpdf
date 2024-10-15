@@ -11,7 +11,7 @@ export async function getEmbeddings(text: string) {
   try {
     const response = await openai.createEmbedding({
       input: text.replace(/\n/g, " "),
-      model: "nomic-embed-text-v1.5",
+      model: process.env.EMBEDDING_MODEL!,
     });
     const result = await response.json();
     if (
