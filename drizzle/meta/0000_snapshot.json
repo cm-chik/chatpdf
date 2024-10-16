@@ -114,7 +114,7 @@
       "schema": "public",
       "values": [
         "user",
-        "system"
+        "system",
       ]
     }
   },

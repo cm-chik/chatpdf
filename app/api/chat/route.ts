@@ -59,15 +59,16 @@ export async function POST(req: Request) {
       model: openai(process.env.GPT_MODEL!),
       system: promptStr.content,
       messages: [promptStr, ...messages],
-      onFinish() {
-        data.close();
-        console.log("data:", data);
+
+      onFinish({ text }) {
         //save msg in stream
-        // db.insert(messages).values({
-        //   chatsId: chatId,
-        //   content: data,
-        //   role: "system",
-        // });
+        db.insert(_messages!).values({
+          chatsId: chatId,
+          content: text.toString(),
+          role: "assistant",
+        });
+        console.log("text:", text);
+        data.close();
       },
     });
     return textStream.toDataStreamResponse({ data });

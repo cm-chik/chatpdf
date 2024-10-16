@@ -7,7 +7,11 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const userSystemEnum = pgEnum("user_system_enum", ["user", "system"]);
+export const userSystemEnum = pgEnum("user_system_enum", [
+  "user",
+  "system",
+  "assistant",
+]);
 
 //export the type of chat to schema
 export type DrizzleChat = typeof chats.$inferSelect;

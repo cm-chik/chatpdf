@@ -26,10 +26,6 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
     console.log("no chats");
     return redirect("/");
   }
-  if (!_chats.find((chat) => chat.id === parseInt(chatId))) {
-    console.log("no chats, redirecting");
-    return <div> No chat</div>;
-  }
 
   const currentChat = _chats.find((chat) => chat.id === parseInt(chatId));
   const isPro = await checkSubscription();
