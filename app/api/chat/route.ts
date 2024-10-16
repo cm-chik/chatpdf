@@ -45,32 +45,36 @@ export async function POST(req: Request) {
       `,
     };
 
-    //save user message into db
-    await db.insert(_messages!).values({
-      chatsId: chatId,
-      content: lastMessage.content,
-      role: "user",
-    });
 
-    const data = new StreamData();
-    data.append({ test: promptStr });
-    //change to streamText
-    const textStream = await streamText({
-      model: openai(process.env.GPT_MODEL!),
-      system: promptStr.content,
-      messages: [promptStr, ...messages],
+   const data = new StreamData();
+   data.append({ test: promptStr });
+   //change to streamText
+   const textStream = await streamText({
+     model: openai(process.env.GPT_MODEL!),
+     system: promptStr.content,
+     messages: [promptStr, ...messages],
 
-      onFinish({ text }) {
-        //save msg in stream
-        db.insert(_messages!).values({
-          chatsId: chatId,
-          content: text.toString(),
-          role: "assistant",
-        });
-        console.log("text:", text);
-        data.close();
-      },
-    });
+     onFinish: async ({ text }) => {
+       // Changed to async function
+       data.close(); //save msg in stream
+       try {
+         //save user message into db
+         await db.insert(_messages!).values({
+           chatsId: chatId,
+           content: lastMessage.content,
+           role: "user",
+         });
+         //save assistant message into db
+         await db.insert(_messages!).values({
+           chatsId: chatId,
+           content: text.toString(),
+           role: "assistant",
+         });
+       } catch (error) {
+         console.error("Error saving message:", error);
+       }
+     },
+   });
     return textStream.toDataStreamResponse({ data });
   } catch (error) {
     console.error(error);
