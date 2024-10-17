@@ -41,7 +41,9 @@ export async function loadS3IntoPinecone(fileKey: string) {
 
   // Step 2. Split and segment the pages into chunks
   const documents = await Promise.all(pages.map(prepareDocumentChunks));
-
+  // documents.map((doc) => {
+  //   console.log(doc);
+  // });
   // Step 3. vectorise and embed indibvidual documents
   const vectors = await Promise.all(documents.flat().map(embedDocument));
 
@@ -58,7 +60,6 @@ async function embedDocument(doc: Document) {
   try {
     const embeddings = await getEmbeddings(doc.pageContent);
     const hash = md5(doc.pageContent);
-
     return {
       id: hash,
       values: embeddings,
@@ -72,25 +73,21 @@ async function embedDocument(doc: Document) {
     throw error;
   }
 }
-
 export const truncateStringByBytes = (str: string, bytes: number) => {
   const enc = new TextEncoder();
   return new TextDecoder("utf-8").decode(enc.encode(str).slice(0, bytes));
 };
 
-async function prepareDocumentChunks(page: PDFPage, splitSize: number) {
-  let { pageContent } = page;
-  pageContent = pageContent.replace("/\n/g", "");
-  const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 200,
-    chunkOverlap: 10,
-  });
+async function prepareDocumentChunks(page: PDFPage) {
+  const { metadata } = page;
+  const pageContent = page.pageContent.replace(/\n/g, " ");
+  const splitter = new RecursiveCharacterTextSplitter();
   const docs = splitter.splitDocuments([
     new Document({
       pageContent,
       metadata: {
-        pageNumber: page.metadata.loc.pageNumber,
-        text: truncateStringByBytes(pageContent, 36000),
+        pageNumber: metadata.loc.pageNumber,
+        text: truncateStringByBytes(pageContent, 300),
       },
     }),
   ]);

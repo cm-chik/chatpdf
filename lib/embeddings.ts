@@ -31,18 +31,3 @@ export async function getEmbeddings(text: string) {
     throw error;
   }
 }
-
-// import { LMStudioClient } from "@lmstudio/sdk";
-
-// const client = new LMStudioClient();
-
-// export async function getEmbeddings(text: string) {
-//   const modelPath = "lmstudio-ai/gemma-2b-it-GGUF";
-//   const llama3 = await client.llm.load(modelPath);
-//   const prediction = llama3.complete("The meaning of life is");
-
-//   for await (const text of prediction) {
-//     process.stdout.write(text);
-//   }
-//   console.warn(prediction);
-// }

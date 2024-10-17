@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
     //get context enable extract relevant data from pdf
     const context = await getContext(lastMessage.content, fileKey);
-
+  
     const promptStr = {
       role: "system",
       content: `AI assistant is a brand new, powerful, human-like artificial intelligence.
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       `,
     };
 
-
+    console.log(promptStr);
    const data = new StreamData();
    data.append({ test: promptStr });
    //change to streamText
