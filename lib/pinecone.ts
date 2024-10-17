@@ -81,15 +81,22 @@ export const truncateStringByBytes = (str: string, bytes: number) => {
 async function prepareDocumentChunks(page: PDFPage) {
   const { metadata } = page;
   const pageContent = page.pageContent.replace(/\n/g, " ");
-  const splitter = new RecursiveCharacterTextSplitter();
-  const docs = splitter.splitDocuments([
+  const splitter = new RecursiveCharacterTextSplitter({
+    separators: ["\n\n", "\n", " "],
+    chunkSize: 1000,
+    chunkOverlap: 200,
+  });
+  const docs = await splitter.splitDocuments([
     new Document({
       pageContent,
       metadata: {
         pageNumber: metadata.loc.pageNumber,
-        text: truncateStringByBytes(pageContent, 300),
       },
     }),
   ]);
+  docs.map((doc) => {
+    doc.metadata.text = truncateStringByBytes(doc.pageContent, 3000);
+  });
+  
   return docs;
 }

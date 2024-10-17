@@ -27,15 +27,15 @@ export async function getMatchesFromEmbeddings(
 export async function getContext(query: string, fileKey: string) {
   const queryEmbeddings = await getEmbeddings(query);
   const matches = await getMatchesFromEmbeddings(queryEmbeddings, fileKey);
-  matches.map((match) => console.log(match));
+  matches.map((match) => console.log(match.score, match.metadata));
   const qualifyingDocs = matches.filter(
-    (match) => match.score && match.score > 0.4
+    (match) => match.score && match.score > 0.5
   );
   type Metadata = {
     text: string;
     pageNumber: number;
   };
-
+  qualifyingDocs.map((qd) => console.log("QD:", qd.metadata!.text));
   const docs = qualifyingDocs.map((match) => (match.metadata as Metadata).text);
-  return docs.join("\n").substring(0, 36000);
+  return docs.join("\n").substring(0, 3000);
 }
