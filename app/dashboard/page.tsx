@@ -10,11 +10,16 @@ const DashboardPage = async () => {
   }
 
   return (
-    <div>
-      Welcome Back! {user.email}
-      <br></br>
-      <FileUpload />
-      <SignOutButton />
+    <div className="relative w-screen min-h-screen bg-gradient-to-r from-rose-100 to-teal-100">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="flex flex-col items-center align-middle text-center gap-4">
+          <p className="mr-3 text-4xl font-semibold">
+            Welcome Back! {user.email}
+          </p>
+          <FileUpload />
+          <SignOutButton />
+        </div>
+      </div>
     </div>
   );
 };
