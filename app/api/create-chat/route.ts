@@ -6,7 +6,7 @@ import { getS3Url } from "@/lib/s3";
 import { redirect } from "next/navigation";
 import { chats } from "@/lib/db/schema";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   const user = await getUser();
   if (!user) {
     redirect("/authenticate");
@@ -25,13 +25,13 @@ export async function POST(req: Request, res: Response) {
         userId: user.id,
       })
       .returning({ insertedId: chats.id });
-    console.log("Chat created successfully: ", chat_id[0].insertedId);
+    // console.log("Chat created successfully: ", chat_id[0].insertedId);
     return NextResponse.json(
       { chat_id: chat_id[0].insertedId },
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

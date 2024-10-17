@@ -44,8 +44,6 @@ export async function POST(req: Request) {
       AI assistant will not invent anything that is not drawn directly from the context.
       `,
     };
-
-    console.log(promptStr);
    const data = new StreamData();
    data.append({ test: promptStr });
    //change to streamText

@@ -41,9 +41,7 @@ export async function loadS3IntoPinecone(fileKey: string) {
 
   // Step 2. Split and segment the pages into chunks
   const documents = await Promise.all(pages.map(prepareDocumentChunks));
-  // documents.map((doc) => {
-  //   console.log(doc);
-  // });
+
   // Step 3. vectorise and embed indibvidual documents
   const vectors = await Promise.all(documents.flat().map(embedDocument));
 

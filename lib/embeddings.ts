@@ -27,7 +27,7 @@ export async function getEmbeddings(text: string) {
     }
     return result.data[0].embedding as number[];
   } catch (error) {
-    console.log("getEmbeddings error:", error);
+    console.error("getEmbeddings error:", error);
     throw error;
   }
 }

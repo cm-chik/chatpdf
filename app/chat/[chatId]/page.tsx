@@ -30,7 +30,6 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
 
   const currentChat = _chats.find((chat) => chat.id === parseInt(chatId));
   const isPro = await checkSubscription();
-  console.log(currentChat);
   return (
     <div className="flex max-h-screen ">
       <div className="flex w-full max-h-screen">
