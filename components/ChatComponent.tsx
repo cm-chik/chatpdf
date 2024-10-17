@@ -8,6 +8,7 @@ import MessageList from "./MessageList";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Message } from "ai";
+import { toast } from "sonner";
 
 type Props = { chatId: number };
 
@@ -27,6 +28,11 @@ const ChatComponent = (props: Props) => {
       chatId: props.chatId,
     },
     initialMessages: data || [],
+    onError: () => {
+      toast.error(
+        "An error occurred while processing your request. Please inform admin"
+      );
+    },
   });
   React.useEffect(() => {
     const messageContainer = document.getElementById("message-container");
@@ -39,12 +45,12 @@ const ChatComponent = (props: Props) => {
   }, [messages]);
   return (
     <div
-      className="relative max-h-screen overflow-scroll"
+      className="relative flex flex-col h-full overflow-scroll justify-between bg-gray-900"
       id="message-container"
     >
       {/* header */}
-      <div className="sticky top-0 inset-x-0 p-2 bg-white h-fit">
-        <h3 className="text-xl font-bold">Chat</h3>
+      <div className="sticky top-0 inset-x-0 p-2 bg-gray-900 h-fit">
+        <h3 className="text-xl font-bold text-white">Chat</h3>
       </div>
 
       {/* message list */}
@@ -52,16 +58,16 @@ const ChatComponent = (props: Props) => {
 
       <form
         onSubmit={handleSubmit}
-        className="sticky bottom-0 inset-x-0 px-2 py-4 bg-white"
+        className="sticky bottom-0 inset-x-0 px-2 py-4 bg-gray-900"
       >
-        <div className="flex">
+        <div className="flex space-x-2 mx-4">
           <Input
             value={input}
             onChange={handleInputChange}
             placeholder="Ask any question..."
             className="w-full"
           />
-          <Button className="bg-blue-600 ml-2">
+          <Button className="bg-gray-900">
             <Send className="h-4 w-4" />
           </Button>
         </div>

@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
     //get context enable extract relevant data from pdf
     const context = await getContext(lastMessage.content, fileKey);
-  
+
     const promptStr = {
       role: "system",
       content: `AI assistant is a brand new, powerful, human-like artificial intelligence.
@@ -44,35 +44,35 @@ export async function POST(req: Request) {
       AI assistant will not invent anything that is not drawn directly from the context.
       `,
     };
-   const data = new StreamData();
-   data.append({ test: promptStr });
-   //change to streamText
-   const textStream = await streamText({
-     model: openai(process.env.GPT_MODEL!),
-     system: promptStr.content,
-     messages: [promptStr, ...messages],
+    const data = new StreamData();
+    data.append({ test: promptStr });
+    //change to streamText
+    const textStream = await streamText({
+      model: openai(process.env.GPT_MODEL!),
+      system: promptStr.content,
+      messages: [promptStr, ...messages],
 
-     onFinish: async ({ text }) => {
-       // Changed to async function
-       data.close(); //save msg in stream
-       try {
-         //save user message into db
-         await db.insert(_messages!).values({
-           chatsId: chatId,
-           content: lastMessage.content,
-           role: "user",
-         });
-         //save assistant message into db
-         await db.insert(_messages!).values({
-           chatsId: chatId,
-           content: text.toString(),
-           role: "assistant",
-         });
-       } catch (error) {
-         console.error("Error saving message:", error);
-       }
-     },
-   });
+      onFinish: async ({ text }) => {
+        // Changed to async function
+        data.close(); //save msg in stream
+        try {
+          //save user message into db
+          await db.insert(_messages!).values({
+            chatsId: chatId,
+            content: lastMessage.content,
+            role: "user",
+          });
+          //save assistant message into db
+          await db.insert(_messages!).values({
+            chatsId: chatId,
+            content: text.toString(),
+            role: "assistant",
+          });
+        } catch (error) {
+          console.error("Error saving message:", error);
+        }
+      },
+    });
     return textStream.toDataStreamResponse({ data });
   } catch (error) {
     console.error(error);
