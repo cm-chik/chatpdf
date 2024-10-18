@@ -87,5 +87,5 @@ export async function GET(req: NextRequest) {
     sessionCookie.attributes
   );
 
-  return redirect("/dashboard");
+  return redirect("/chat/dashboard");
 }
