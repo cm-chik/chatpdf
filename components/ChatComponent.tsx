@@ -49,7 +49,7 @@ const ChatComponent = (props: Props) => {
       id="message-container"
     >
       {/* header */}
-      <div className="sticky top-0 inset-x-0 p-2 bg-gray-900 h-fit">
+      <div className="sticky top-0 inset-x-0 p-4 bg-gray-900 h-fit ">
         <h3 className="text-xl font-bold text-white">Chat</h3>
       </div>
 

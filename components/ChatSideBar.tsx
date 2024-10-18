@@ -10,8 +10,10 @@ import { cn } from "@/lib/utils";
 import SubscriptionButton from "./SubscriptionButton";
 
 const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
+  
+
   return (
-    <div className="w-full max-h-screen overflow-scroll soff p-4 text-gray-200 bg-gray-900 flex flex-col gap-4">
+    <div className="w-full max-h-screen overflow-y-scroll h-screen x-[150px] soff p-4 text-gray-200 bg-gray-900 flex flex-col gap-4">
       <Link href="/chat/dashboard">
         <Button className="w-full border-dashed border-white border">
           <PlusCircle className="mr-2 w-4 h-4" />

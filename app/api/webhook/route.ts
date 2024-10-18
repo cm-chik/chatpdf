@@ -16,13 +16,13 @@ export async function POST(req: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SIGNING_SECRET as string
     );
-  } catch (error) {
+  } catch {
     return new NextResponse("webhook error", { status: 400 });
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
 
-  // new subscription created
+  // new subscription created, save in db
   if (event.type === "checkout.session.completed") {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
     });
   }
-
+  //subscription created, check if invoice succeed
   if (event.type === "invoice.payment_succeeded") {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
@@ -54,5 +54,6 @@ export async function POST(req: Request) {
       .where(eq(userSubscriptions.stripeSubscriptionId, subscription.id));
   }
 
+  //need 200 to avoid stripe from sending webhook again
   return new NextResponse(null, { status: 200 });
 }
