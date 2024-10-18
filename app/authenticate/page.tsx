@@ -3,7 +3,7 @@ import SignUpForm from "./SignUpForm";
 import SignInForm from "./SignInForm";
 import SignInGoogleButton from "./SignInGoogleButton";
 
-export function AuthenticatePage() {
+const AuthenticatePage = () => {
   return (
     <div className="w-screen min-h-screen bg-gradient-to-r from-rose-100 to-teal-100">
       <div className=" flex flex-col justify-center items-center h-screen gap-4">
@@ -23,6 +23,6 @@ export function AuthenticatePage() {
       </div>
     </div>
   );
-}
+};
 
 export default AuthenticatePage;
