@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "export NODE_OPTIONS='--max-old-space-size=8192' && next dev --port 8642",
     "build": "next build",
     "start": "next start",
