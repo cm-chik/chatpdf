@@ -1,4 +1,4 @@
-import { PutObjectCommandOutput, S3 } from "@aws-sdk/client-s3";
+import { S3 } from "@aws-sdk/client-s3";
 
 export async function uploadToS3(
   file: File
@@ -26,15 +26,12 @@ export async function uploadToS3(
         Key: file_key,
         Body: file,
       };
-      s3.putObject(
-        params,
-        (err: any, data: PutObjectCommandOutput | undefined) => {
-          return resolve({
-            file_key,
-            file_name: file.name,
-          });
-        }
-      );
+      s3.putObject(params, () => {
+        return resolve({
+          file_key,
+          file_name: file.name,
+        });
+      });
     } catch (error) {
       console.error("Cannot upload to S3:", error);
       reject(error);
