@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SignUpForm from "./SignUpForm_1";
-import SignInForm from "./SignInForm_1";
-import SignInGoogleButton from "./SignInGoogleButton_1";
+import SignUpForm from "./SignUpForm";
+import SignInForm from "./SignInForm";
+import SignInGoogleButton from "./SignInGoogleButton";
 
 export function AuthenticatePage() {
   return (

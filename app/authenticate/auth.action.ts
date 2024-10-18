@@ -1,8 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { SignUpSchema } from "./SignUpForm_1";
-import { SignInSchema } from "./SignInForm_1";
+import { SignUpSchema } from "./SignUpForm";
+import { SignInSchema } from "./SignInForm";
 import { prisma } from "@/lib/prisma";
 import { Argon2id } from "oslo/password";
 import { cookies } from "next/headers";
