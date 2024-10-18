@@ -21,11 +21,11 @@ const SubscriptionButton = (props: Props) => {
   return (
     <Button
       className="w-full mr-2 text-black"
-      disabled={loading}
+      disabled={loading || props.isPro}
       onClick={handleSubscription}
       variant="outline"
     >
-      {props.isPro ? "Manage Subscriptions" : "Get Pro"}
+      {props.isPro ? "Thank you for subscribing!" : "Get Pro"}
     </Button>
   );
 };

@@ -6,7 +6,7 @@ import { userSubscriptions } from "@/lib/db/schema";
 import { stripe } from "@/lib/stripe";
 import { eq } from "drizzle-orm";
 
-const returnUrl = `${process.env.NEXT_PUBLIC_URL}`;
+const returnUrl = `${process.env.NEXT_PUBLIC_URL}` + "/chat/dashboard";
 
 export async function GET() {
   try {
@@ -23,7 +23,7 @@ export async function GET() {
       //trying to cancel at the billing portal
       const stripeSession = await stripe.billingPortal.sessions.create({
         customer: _userSubscriptions[0].stripeCustomerId,
-        return_url: `${returnUrl}/settings`,
+        return_url: `${returnUrl}/chat/dashboard`,
       });
       return NextResponse.json({ url: stripeSession.url });
     }
