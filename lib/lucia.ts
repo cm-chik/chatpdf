@@ -1,10 +1,24 @@
 import { Lucia } from "lucia";
-import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
-import { prisma } from "./prisma";
+import pg from "pg";
+import { users, sessions } from "./db/schema";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 import { cookies } from "next/headers";
 import { signOut } from "@/app/authenticate/auth.action";
+import dotenv from "dotenv";
+import { eq } from "drizzle-orm";
+dotenv.config();
 
-const adapter = new PrismaAdapter(prisma.session, prisma.user);
+const pool = new pg.Pool({
+  connectionString: process.env.POSTGRES_URL,
+});
+const db = drizzle(pool);
+
+const adapter = new DrizzlePostgreSQLAdapter(
+  db,
+  sessions, // Specify your session table name here
+  users // Specify your user table name here
+);
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
@@ -38,15 +52,10 @@ export const getUser = async () => {
   } catch (error) {
     console.error(error);
   }
-  const dbUser = await prisma.user.findUnique({
-    where: {
-      id: user?.id,
-    },
-    select: {
-      email: true,
-      name: true,
-      id: true,
-    },
-  });
-  return dbUser;
+  const dbUser = await db
+    .select({ id: users.id, email: users.email, name: users.name })
+    .from(users)
+    .where(eq(users.id, user?.id as string));
+
+  return dbUser[0]!;
 };

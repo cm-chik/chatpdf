@@ -37,13 +37,36 @@ export const messages = pgTable("messages", {
   role: userSystemEnum("role").notNull(),
 });
 
-
 //export usersubsription
 export const userSubscriptions = pgTable("user_subscriptions", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id", { length: 256 }).notNull().unique(),
-  stripeCustomerId: varchar("stripe_customer_id", { length: 256 }).notNull().unique(),
-  stripeSubscriptionId: varchar("stripe_subscription_id", { length: 256 }).unique(),
+  stripeCustomerId: varchar("stripe_customer_id", { length: 256 })
+    .notNull()
+    .unique(),
+  stripeSubscriptionId: varchar("stripe_subscription_id", {
+    length: 256,
+  }).unique(),
   stripePriceId: varchar("stripe_price_id", { length: 256 }).notNull(),
   stripeCurrentPeriodEnd: timestamp("stripe_current_period_end"),
+});
+
+export const users = pgTable("users", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  name: text("name"),
+  role: text("role"),
+  hashedPassword: text("hashed_password"),
+  picture: text("picture"),
+});
+
+export const sessions = pgTable("sessions", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  expiresAt: timestamp("expires_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
 });

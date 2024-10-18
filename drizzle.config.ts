@@ -8,5 +8,6 @@ export default defineConfig({
   schema: "./lib/db/schema.ts",
   dbCredentials: {
     url: process.env.POSTGRES_URL!,
+    password: process.env.POSTGRES_PASSWORD!,
   },
 }) satisfies Config;

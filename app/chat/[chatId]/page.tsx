@@ -13,21 +13,15 @@ import DashboardPage from "@/app/dashboard/page";
 type Props = {
   params: { chatId: string };
 };
-
 const ChatPage = async ({ params: { chatId } }: Props) => {
   const user = await getUser();
   if (!user) {
     redirect("/authenticate");
   }
-  const _chats = await db
-    .select()
-    .from(chats)
-    .where(eq(chats.userId, user!.id));
+  const _chats = await db.select().from(chats).where(eq(chats.userId, user.id));
   if (!_chats) {
-    console.log("no chats");
     return redirect("/");
   }
-
   const currentChat = _chats.find((chat) => chat.id === parseInt(chatId));
   const isPro = await checkSubscription();
   return (

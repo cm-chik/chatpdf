@@ -65,7 +65,7 @@ const ChatComponent = (props: Props) => {
             value={input}
             onChange={handleInputChange}
             placeholder="Ask any question..."
-            className="w-full"
+            className="w-full text-white"
           />
           <Button className="bg-gray-900">
             <Send className="h-4 w-4" />

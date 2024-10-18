@@ -1,9 +1,12 @@
 import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 import { GoogleOAuthClient } from "@/lib/googleOAuth";
-import { prisma } from "@/lib/prisma";
 import { lucia } from "@/lib/lucia";
 import { redirect } from "next/navigation";
+import { users } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db";
+import { v4 } from "uuid";
 
 //http://localhost:8642/api/auth/google/callback
 export async function GET(req: NextRequest) {
@@ -53,20 +56,28 @@ export async function GET(req: NextRequest) {
   };
   let userId: string = "";
   //if email exist, sign in, else sign up
-  const existingUser = await prisma.user.findUnique({
-    where: { email: googleData.email },
-  });
-  if (existingUser) {
-    userId = existingUser.id;
+
+  const existingUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, googleData.email));
+
+  if (existingUser[0]) {
+    userId = existingUser[0].id;
   } else {
-    const user = await prisma.user.create({
-      data: {
+    //create user into db
+    const user = await db
+      .insert(users!)
+      .values({
+        id: v4().toString(),
         name: googleData.name,
         email: googleData.email,
         picture: googleData.picture,
-      },
-    });
-    userId = user.id;
+        role: "user",
+      })
+      .returning({ id: users.id });
+
+    userId = user[0].id;
   }
   const session = await lucia.createSession(userId, {});
   const sessionCookie = lucia.createSessionCookie(session.id);

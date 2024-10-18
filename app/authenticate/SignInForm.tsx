@@ -47,7 +47,7 @@ const SignInForm = () => {
   async function onSubmit(values: z.infer<typeof SignInSchema>) {
     const res = await signIn(values);
     if (res.success) {
-      toast.success(`Welcome Back! ${res.user!.name}`);
+      toast.success(`Welcome Back! ${res.user![0].name}`);
       router.push("/chat/dashboard");
     } else {
       toast.error(res.error);

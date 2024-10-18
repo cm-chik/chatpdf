@@ -35,7 +35,6 @@ export async function getContext(query: string, fileKey: string) {
     text: string;
     pageNumber: number;
   };
-  qualifyingDocs.map((qd) => console.log("QD:", qd.metadata!.text));
   const docs = qualifyingDocs.map((match) => (match.metadata as Metadata).text);
   return docs.join("\n").substring(0, 3000);
 }

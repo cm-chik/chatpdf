@@ -3,40 +3,47 @@
 import { z } from "zod";
 import { SignUpSchema } from "./SignUpForm";
 import { SignInSchema } from "./SignInForm";
-import { prisma } from "@/lib/prisma";
 import { Argon2id } from "oslo/password";
 import { cookies } from "next/headers";
 import { lucia } from "@/lib/lucia";
 import { GoogleOAuthClient } from "@/lib/googleOAuth";
 import { generateCodeVerifier, generateState } from "arctic";
+import { db } from "@/lib/db";
+import { users } from "@/lib/db/schema";
+import { v4 } from "uuid";
+import { eq } from "drizzle-orm";
 
 export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
   try {
     //If user exists, return error
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        email: values.email,
-      },
-    });
-    if (existingUser) {
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, values.email));
+    if (existingUser.length > 0) {
       return { error: "User already exists", success: false };
     }
     const hashedPassword = await new Argon2id().hash(values.password);
-    const user = await prisma.user.create({
-      data: {
+    //create user into db
+    const user = await db
+      .insert(users!)
+      .values({
+        id: v4().toString(),
         name: values.name,
         email: values.email,
         hashedPassword: hashedPassword,
-      },
-    });
-    const session = await lucia.createSession(user.id, {});
+        role: "user",
+      })
+      .returning();
+    //save assistant message into db
+    const session = await lucia.createSession(user[0].id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
       sessionCookie.attributes
     );
-    return { user, success: true };
+    return { userID: user, success: true };
   } catch (error) {
     console.error(error);
     return { error: "Something went wrong", success: false };
@@ -45,23 +52,25 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
 
 export const signIn = async (values: z.infer<typeof SignInSchema>) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: values.email,
-      },
-    });
-    if (!user) {
-      return { error: "User not found", success: false };
+    //If user exists, return error
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, values.email));
+    console.log("user: ", user);
+    console.log("user.length: ", user.length);
+    if (user.length === 0) {
+      return { error: "User does not exist", success: false };
     }
+
     const passwordMatch = await new Argon2id().verify(
-      user.hashedPassword!,
+      user[0].hashedPassword!,
       values.password
     );
     if (!passwordMatch) {
       return { error: "Invalid password", success: false };
     }
-    const session = await lucia.createSession(user.id, {});
-    console.log("session created successfully");
+    const session = await lucia.createSession(user[0].id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
       sessionCookie.name,
