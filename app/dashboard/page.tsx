@@ -1,7 +1,7 @@
 import { getUser } from "@/lib/lucia";
 import { redirect } from "next/navigation";
 import React from "react";
-import SignOutButton from "../authenticate/SignOutButton";
+import SignOutButton from "../authenticate/SignOutButton_1";
 import FileUpload from "@/components/FileUpload";
 const DashboardPage = async () => {
   const user = await getUser();

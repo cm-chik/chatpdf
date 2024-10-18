@@ -1,6 +1,6 @@
 "use client";
 
-import { signOut } from "../authenticate/auth.action";
+import { signOut } from "./auth.action";
 import { Button } from "@/components/ui/button";
 
 export default function SignOutButton() {
