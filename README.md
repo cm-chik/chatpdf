@@ -15,3 +15,11 @@ What's missing:
 
 
 Check demo.env for local environment variables.
+
+Big credit to [@Elliott-Chong] (https://github.com/Elliott-Chong) for his excellent tutorial!
+ChatPDF:
+https://www.youtube.com/watch?v=bZFedu-0emE
+Auth (Google Auth)
+https://www.youtube.com/watch?v=t-JJgTRf3Ms&t=5685s
+(Lucia+Drizzle+NeonDB)
+https://github.com/muradbu/lucia-drizzle-neon-example
