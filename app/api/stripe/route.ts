@@ -28,7 +28,6 @@ export async function GET() {
       return NextResponse.json({ url: stripeSession.url });
     }
     //user's first time trying to subscribe
-    console.log(returnUrl);
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: returnUrl,
       cancel_url: returnUrl,

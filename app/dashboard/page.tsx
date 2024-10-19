@@ -14,7 +14,7 @@ const DashboardPage = async () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="flex flex-col items-center align-middle text-center gap-8">
           <p className="mr-3 text-4xl font-semibold leading-snug">
-            Welcome Back, {user.name}. <br />
+            Welcome {user.name}, <br />
             How can I help you today?
           </p>
           <FileUpload />

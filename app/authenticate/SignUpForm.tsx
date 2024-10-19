@@ -54,7 +54,7 @@ const SignUpForm = () => {
     const res = await signUp(values);
     if (res.success) {
       toast.success("Success");
-      router.push("/dashboard");
+      router.push("/chat/dashboard");
     } else {
       toast.error(res.error);
       console.error(res.error);
