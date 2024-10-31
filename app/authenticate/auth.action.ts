@@ -57,8 +57,6 @@ export const signIn = async (values: z.infer<typeof SignInSchema>) => {
       .select()
       .from(users)
       .where(eq(users.email, values.email));
-    console.log("user: ", user);
-    console.log("user.length: ", user.length);
     if (user.length === 0) {
       return { error: "User does not exist", success: false };
     }

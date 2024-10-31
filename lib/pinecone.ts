@@ -37,11 +37,16 @@ export async function loadS3IntoPinecone(fileKey: string) {
   }
   // Load the PDF into LangChain=
   const loader = new PDFLoader(file_name);
-
   const pages = (await loader.load()) as PDFPage[];
 
   // Step 2. Split and segment the pages into chunks
   const documents = await Promise.all(pages.map(prepareDocumentChunks));
+  // console.log(
+  //   "Documents:",
+  //   documents.flat().map((doc, index) => {
+  //     console.log("Chunk ", index, ":", doc.metadata.text);
+  //   })
+  // );
   // Step 3. vectorise and embed indibvidual documents
   const vectors = await Promise.all(documents.flat().map(embedDocument));
 
@@ -80,7 +85,7 @@ async function prepareDocumentChunks(page: PDFPage) {
   const { metadata } = page;
   const pageContent = page.pageContent.replace(/\n/g, " ");
   const splitter = new RecursiveCharacterTextSplitter({
-    //separators: ["\n\n", "\n", " "],
+    separators: ["\n\n", "\n", "    ", "   ", "  ", " "],
     // chunkSize: 1000,
     // chunkOverlap: 200,
   });
