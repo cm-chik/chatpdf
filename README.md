@@ -7,11 +7,12 @@ Feature | Tech Stack
 - Chat with PDF files | OpenAI + Pinecone 
 - Storage | AWS S3
 - Layout | Next.js + Tailwindcss + Sonner (toaster)
+- AI/embedding : ChatGPT API / (Support LM Studio)
 
 What's missing:
-- Better UI/UX (i.e. /chat/dashboard)
+- Better UI/UX 
+- Better routing (i.e. /chat/dashboard)
 - Middleware for authentication
-- Upgrade with Real ChatGPT API (Developed by local LLM model - LM Studio)
 
 
 Check demo.env for local environment variables.
